@@ -1,4 +1,4 @@
-geospatial-segmentation/data/
+geospatial-analysis/data/
 .DS_Store
 
   ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/

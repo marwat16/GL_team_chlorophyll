@@ -204,17 +204,25 @@ class SemanticSegmentationModel:
     # model = SemanticSegmentationModel()
     # model.train_model(training_data_paths)
 
-    # ===================== Harness (ours, not ERA's) =====================
 if __name__ == "__main__":
-    import argparse, json, random
+    import argparse
+    import json
+    import random
+    from pathlib import Path
 
-    HERE = os.path.dirname(os.path.abspath(__file__))
+    this_folder = Path(__file__).resolve().parent
+    train_file = this_folder / "train_split.json"
+    model = SemanticSegmentationModel()
 
-    def load_split(name):
-        with open(os.path.join(HERE, name)) as f:
-            return [tuple(os.path.join(HERE, p) for p in pair) for pair in json.load(f)]
+    def load_split_data(split_file):
+        with open(this_folder / split_file) as f:
+            pairs = json.load(f)
+        return [(this_folder / image_path, this_folder / label_path) for image_path, label_path in pairs]
 
-    def miou(preds, labels, n=NUM_CLASSES):
+    train_pairs = load_split_data("train_split.json")
+    test_pairs = load_split_data("test_split.json")
+
+    def miou(preds, labels, n=num_of_classes):
         inter, union = np.zeros(n), np.zeros(n)
         for p, l in zip(preds, labels):
             for c in range(1, n + 1):
@@ -225,23 +233,18 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", choices=["train", "infer", "full"], default="full")
-    parser.add_argument("--weights", default=os.path.join(HERE, "weights", "ai_generated.pt"))
-    parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--epochs", type=int, default=EPOCHS)
+    # only for test run:
     parser.add_argument("--subset", type=int, default=0,
                         help="smoke test: use only N train and N test images")
     args = parser.parse_args()
 
     random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
 
-    train_pairs = load_split("train_split.json")
-    test_pairs = load_split("test_split.json")
+    # only for test run:
     if args.subset:
         rng = random.Random(0)
         train_pairs = rng.sample(train_pairs, args.subset)
         test_pairs = rng.sample(test_pairs, args.subset)
-
-    model = SemanticSegmentationModel()
 
     if args.mode in ("train", "full"):
         model.train_model(train_pairs, epochs=args.epochs)
