@@ -12,19 +12,14 @@ import os
 import albumentations as A
 from albumentations.pytorch import ToTensorV2
 from torch.amp import GradScaler, autocast
-import json
 # Constants for model training
 EPOCHS = 225
 NUM_CLASSES = 17
 IMG_SIZE = 256 # DLRSD images are 256x256
 BATCH_SIZE = 16 # Adjust based on GPU memory
 LEARNING_RATE = 1e-4
-EPOCHS = 225 # MODIFICATION: Increased epochs to allow for more convergence
 # Device configuration (CUDA if available, else CPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-with open("train_split.json") as f:
-    training_data_paths = [tuple(pair) for pair in json.load(f)]
 
 # Custom Dataset Class
 class DLRSDDataset(Dataset):
@@ -206,7 +201,60 @@ class SemanticSegmentationModel:
             pred_mask_np = predicted_mask.cpu().numpy() + 1
         return pred_mask_np
     
+    # model = SemanticSegmentationModel()
+    # model.train_model(training_data_paths)
+
+    # ===================== Harness (ours, not ERA's) =====================
 if __name__ == "__main__":
-    # Initialize and train the model
+    import argparse, json, random
+
+    HERE = os.path.dirname(os.path.abspath(__file__))
+
+    def load_split(name):
+        with open(os.path.join(HERE, name)) as f:
+            return [tuple(os.path.join(HERE, p) for p in pair) for pair in json.load(f)]
+
+    def miou(preds, labels, n=NUM_CLASSES):
+        inter, union = np.zeros(n), np.zeros(n)
+        for p, l in zip(preds, labels):
+            for c in range(1, n + 1):
+                inter[c - 1] += np.logical_and(p == c, l == c).sum()
+                union[c - 1] += np.logical_or(p == c, l == c).sum()
+        valid = union > 0
+        return float((inter[valid] / union[valid]).mean())
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mode", choices=["train", "infer", "full"], default="full")
+    parser.add_argument("--weights", default=os.path.join(HERE, "weights", "ai_generated.pt"))
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--epochs", type=int, default=EPOCHS)
+    parser.add_argument("--subset", type=int, default=0,
+                        help="smoke test: use only N train and N test images")
+    args = parser.parse_args()
+
+    random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
+
+    train_pairs = load_split("train_split.json")
+    test_pairs = load_split("test_split.json")
+    if args.subset:
+        rng = random.Random(0)
+        train_pairs = rng.sample(train_pairs, args.subset)
+        test_pairs = rng.sample(test_pairs, args.subset)
+
     model = SemanticSegmentationModel()
-    model.train_model(training_data_paths)
+
+    if args.mode in ("train", "full"):
+        model.train_model(train_pairs, epochs=args.epochs)
+        os.makedirs(os.path.dirname(args.weights), exist_ok=True)
+        torch.save(model.model.state_dict(), args.weights)
+        print(f"Saved weights to {args.weights}")
+    else:
+        model.model.load_state_dict(torch.load(args.weights, map_location=device))
+
+    if args.mode in ("infer", "full"):
+        preds, labels = [], []
+        for img_path, lbl_path in test_pairs:
+            img = np.array(Image.open(img_path).convert("RGB"))
+            preds.append(model.segment_single_image(img))
+            labels.append(np.array(Image.open(lbl_path)))
+        print(f"mIoU: {miou(preds, labels):.4f}")
