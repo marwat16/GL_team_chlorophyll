@@ -13,7 +13,7 @@ from utils.utils_fit import fit_one_epoch
 
 if __name__ == "__main__":
     Cuda = True
-    num_classes = 7
+    num_classes = 18
     pretrained = False
     input_shape = [256, 256]
     Epoch = 150
