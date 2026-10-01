@@ -205,59 +205,76 @@ class SemanticSegmentationModel:
     # model.train_model(training_data_paths)
 
 if __name__ == "__main__":
+    # only needed for sub testing
     import argparse
     import json
     import random
     from pathlib import Path
 
+    seed = 42
     this_folder = Path(__file__).resolve().parent
-    train_file = this_folder / "train_split.json"
-    model = SemanticSegmentationModel()
+    train_data_file = this_folder / "train_split.json"
+    test_data_file = this_folder / "test_split.json"
+    total_iou = 0
+    num_of_classes = 0
 
-    def load_split_data(split_file):
-        with open(this_folder / split_file) as f:
-            pairs = json.load(f)
-        return [(this_folder / image_path, this_folder / label_path) for image_path, label_path in pairs]
-
-    train_pairs = load_split_data("train_split.json")
-    test_pairs = load_split_data("test_split.json")
-
-    def miou(preds, labels, n=num_of_classes):
-        inter, union = np.zeros(n), np.zeros(n)
-        for p, l in zip(preds, labels):
-            for c in range(1, n + 1):
-                inter[c - 1] += np.logical_and(p == c, l == c).sum()
-                union[c - 1] += np.logical_or(p == c, l == c).sum()
-        valid = union > 0
-        return float((inter[valid] / union[valid]).mean())
-
+    # only needed for sub testing
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=["train", "infer", "full"], default="full")
-    # only for test run:
-    parser.add_argument("--subset", type=int, default=0,
-                        help="smoke test: use only N train and N test images")
+    parser.add_argument("--epochs", type=int, default=EPOCHS)
+    parser.add_argument("--subset", type=int, default=0)
     args = parser.parse_args()
 
-    random.seed(args.seed); np.random.seed(args.seed); torch.manual_seed(args.seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
-    # only for test run:
+    # load split data:
+    with open(train_data_file) as f:
+        train_data_pairs = [(this_folder / image_path, this_folder / label_path)
+                       for image_path, label_path in json.load(f)]
+    with open(test_data_file) as f:
+        test_data_pairs = [(this_folder / image_path, this_folder / label_path)
+                      for image_path, label_path in json.load(f)]
+
+    # only needed for sub testing
     if args.subset:
         rng = random.Random(0)
-        train_pairs = rng.sample(train_pairs, args.subset)
-        test_pairs = rng.sample(test_pairs, args.subset)
+        train_data_pairs = rng.sample(train_data_pairs, args.subset)
+        test_data_pairs = rng.sample(test_data_pairs, args.subset)
 
-    if args.mode in ("train", "full"):
-        model.train_model(train_pairs, epochs=args.epochs)
-        os.makedirs(os.path.dirname(args.weights), exist_ok=True)
-        torch.save(model.model.state_dict(), args.weights)
-        print(f"Saved weights to {args.weights}")
-    else:
-        model.model.load_state_dict(torch.load(args.weights, map_location=device))
+    # training:
+    model = SemanticSegmentationModel()
+    model.train_model(train_data_pairs, epochs=args.epochs)
 
-    if args.mode in ("infer", "full"):
-        preds, labels = [], []
-        for img_path, lbl_path in test_pairs:
-            img = np.array(Image.open(img_path).convert("RGB"))
-            preds.append(model.segment_single_image(img))
-            labels.append(np.array(Image.open(lbl_path)))
-        print(f"mIoU: {miou(preds, labels):.4f}")
+    # evaluate: 
+    intersection = np.zeros(NUM_CLASSES)
+    union = np.zeros(NUM_CLASSES)
+
+    for image_path, label_path in test_data_pairs:
+        image = Image.open(image_path)
+        image = image.convert("RGB")
+        image = np.array(image)
+
+        label = Image.open(label_path)
+        label = np.array(label)
+
+        prediction = model.segment_single_image(image)
+
+        for class_number in range(1, NUM_CLASSES + 1):
+            predicted_pixels = prediction == class_number
+            real_pixels = label == class_number
+
+            same_pixels = predicted_pixels & real_pixels
+            all_pixels = predicted_pixels | real_pixels
+
+            intersection[class_number - 1] += same_pixels.sum()
+            union[class_number - 1] += all_pixels.sum()
+
+    for i in range(NUM_CLASSES):
+        if union[i] > 0:
+            iou = intersection[i] / union[i]
+            total_iou += iou
+            num_of_classes += 1
+
+    miou = total_iou / num_of_classes
+    print("mIoU:", miou)
