@@ -1,8 +1,32 @@
+.vagrant
+macos-sonoma.conf
+macos-sonoma/
+Vagrantfile
+Session.vim
+.idea
+.venv
+venv
+.vagrant
+*/__pycache__/*
+examples/linux-ps-profiling/primer
+examples/linux-powerjoular-profiling/primer
+**/__pycache__/
+*/.DS_Store
+.DS_Store
+.vscode
+.python-version
+tmp/
+_trial_temp/
+pycharm-interpreter.sh
+python
+Session.vim
+Vagrantfile
+wslvenv/
+__MACOSX/
 geospatial-analysis/data/
 .DS_Store
-
-  ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
-  ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
-  ma_unet_repo/logs/
-  weights/
-  __pycache__/
+ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
+ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
+ma_unet_repo/logs/
+weights/
+__pycache__/
