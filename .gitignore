@@ -23,3 +23,10 @@ Session.vim
 Vagrantfile
 wslvenv/
 __MACOSX/
+geospatial-analysis/data/
+.DS_Store
+ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
+ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
+ma_unet_repo/logs/
+weights/
+__pycache__/
