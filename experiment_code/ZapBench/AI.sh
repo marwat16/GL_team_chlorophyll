@@ -1,1 +1,5 @@
-python sample.py
+#!/bin/bash
+set -e
+
+cd "$(dirname "$0")"
+python3 sample.py
