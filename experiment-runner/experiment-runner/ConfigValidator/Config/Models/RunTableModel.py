@@ -12,7 +12,7 @@ class RunTableModel:
     def __init__(self,
                  factors: List[FactorModel],
                  exclude_combinations: List[Dict[FactorModel, List[SupportsStr]]] = None,
-                 repetitions: int = 1,
+                 repetitions: int | Dict[str, int] = 1,
                  data_columns: List[str] = None,
                  shuffle: bool = False
                  ):
@@ -21,8 +21,9 @@ class RunTableModel:
         if data_columns is None:
             data_columns = []
 
-        if repetitions < 1:
-            raise BaseError("Negative number of repetitions detected!")
+        if isinstance(repetitions, int):
+            if repetitions < 1:
+                raise BaseError("Negative number of repetitions detected!")
 
         if len(set([factor.factor_name for factor in factors])) != len(factors):
             raise BaseError("Duplicate factor name detected!")
@@ -80,19 +81,53 @@ class RunTableModel:
             for data_column in self.__data_columns:
                 column_names.append(data_column)
 
+        
         experiment_run_table = []
-        for j in range(self.__repetitions):
-            for i, combo in enumerate(filtered_list):
+
+        # Find the benchmark factor's position
+        benchmark_index = next(
+            (
+                index
+                for index, factor in enumerate(self.__factors)
+                if factor.factor_name == "benchmark"
+            ),
+            None
+        )
+
+        if isinstance(self.__repetitions, dict) and benchmark_index is None:
+            raise BaseError(
+                "Per-benchmark repetitions require a 'benchmark' factor!"
+            )
+
+        for i, combo in enumerate(filtered_list):
+            # Support both a single repetition count and per-benchmark counts
+            if isinstance(self.__repetitions, int):
+                repetitions = self.__repetitions
+            else:
+                benchmark = combo[benchmark_index]
+
+                if benchmark not in self.__repetitions:
+                    raise BaseError(
+                        f"No repetition count specified for benchmark '{benchmark}'!"
+                    )
+
+                repetitions = self.__repetitions[benchmark]
+
+            for j in range(repetitions):
                 row_list = list(combo)
-                row_list.insert(0, f'run_{i}_repetition_{j}')  # __run_id
-                row_list.insert(1, RunProgress.TODO)  # __done
+                row_list.insert(0, f'run_{i}_repetition_{j}')
+                row_list.insert(1, RunProgress.TODO)
 
                 if self.__data_columns:
                     for _ in self.__data_columns:
                         row_list.append(" ")
-                experiment_run_table.append(dict(zip(column_names, row_list)))
+
+                experiment_run_table.append(
+                    dict(zip(column_names, row_list))
+                )
 
         if self.__shuffle:
             random.shuffle(experiment_run_table)
+
         return experiment_run_table
 
