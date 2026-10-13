@@ -1,1 +1,1 @@
-python sample.py
+python3 sample.py

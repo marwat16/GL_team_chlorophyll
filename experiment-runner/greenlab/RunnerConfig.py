@@ -108,11 +108,17 @@ class RunnerConfig:
         print(f"context.execute_run['benchmark']: {context.execute_run['benchmark']}")
         self.remote_energy_file = remote_file
 
+        remote_code_file = (
+            f"/home/gl_chlorophyll/GL_team_chlorophyll/experiment_code/"
+            f"{context.execute_run['benchmark']}/"
+            f"{context.execute_run['code']}.sh"
+        )
+
         remote_cmd = (
             f"rm -f {remote_file} && "
             f"energibridge --gpu --summary "
             f"-o {remote_file} "
-            f"sleep 5"
+            f"bash {remote_code_file}"
         )
 
         self.profiler_process = subprocess.Popen(
