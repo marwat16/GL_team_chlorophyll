@@ -8,7 +8,8 @@ dynamic = [
   "version",
 ]
 dependencies = [
-  "pandas>=2.0.0",
+  "pandas>=2.0.0,<2.3",
+  "pyarrow>=15,<18",
   "gluonts~=0.15.1",
   "numpy~=1.26.0",
   "einops==0.7.*",
@@ -43,6 +44,7 @@ keywords = ["Time Series Forecasting", "Transformer", "Deep Learning", "PyTorch"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python",
+  "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 

@@ -30,3 +30,10 @@ ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
 ma_unet_repo/logs/
 weights/
 __pycache__/
+
+# GIFT-eval
+experiment_code/GIFT-eval/.env
+experiment_code/GIFT-eval/data/
+experiment_code/GIFT-eval/results/
+experiment_code/GIFT-eval/notebooks/granite-tsfm/
+*.egg-info/
