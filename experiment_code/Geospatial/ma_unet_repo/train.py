@@ -16,7 +16,7 @@ if __name__ == "__main__":
     num_classes = 18
     pretrained = False
     input_shape = [256, 256]
-    Epoch = 150
+    Epoch = 80
     batch_size = 16
     lr = 2e-4
     VOCdevkit_path = 'VOCdevkit'

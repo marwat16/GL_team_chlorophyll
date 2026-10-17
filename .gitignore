@@ -23,13 +23,6 @@ Session.vim
 Vagrantfile
 wslvenv/
 __MACOSX/
-geospatial-analysis/data/
-.DS_Store
-ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
-ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
-ma_unet_repo/logs/
-weights/
-__pycache__/
 
 # GIFT-eval
 experiment_code/GIFT-eval/.env
@@ -37,3 +30,9 @@ experiment_code/GIFT-eval/data/
 experiment_code/GIFT-eval/results/
 experiment_code/GIFT-eval/notebooks/granite-tsfm/
 *.egg-info/
+
+# Geospatial
+experiment_code/Geospatial/data/
+experiment_code/Geospatial/ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
+experiment_code/Geospatial/ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
+experiment_code/Geospatial/ma_unet_repo/logs/
