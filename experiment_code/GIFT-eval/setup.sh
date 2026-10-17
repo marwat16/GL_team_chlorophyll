@@ -44,7 +44,7 @@ echo "GIFT_EVAL=$(pwd -W 2>/dev/null || pwd)/data/gift-eval" > .env
 cd notebooks
 if [ ! -d granite-tsfm ]; then
     git clone https://github.com/ibm-granite/granite-tsfm.git
-    (cd granite-tsfm && git switch gift && python -m pip install ".[notebooks]")
+    (cd granite-tsfm && git switch gift && python -m pip install ".[notebooks]" "transformers>=4.38,<5")
 fi
 
 echo "Setup done."
