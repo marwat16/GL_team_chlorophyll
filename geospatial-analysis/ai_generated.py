@@ -216,7 +216,7 @@ if __name__ == "__main__":
     train_data_file = this_folder / "train_split.json"
     test_data_file = this_folder / "test_split.json"
     total_iou = 0
-    num_of_classes = 0
+    counted_classes = 0
 
     # only needed for sub testing
     parser = argparse.ArgumentParser()
@@ -274,7 +274,7 @@ if __name__ == "__main__":
         if union[i] > 0:
             iou = intersection[i] / union[i]
             total_iou += iou
-            num_of_classes += 1
+            counted_classes += 1
 
-    miou = total_iou / num_of_classes
+    miou = total_iou / counted_classes
     print("mIoU:", miou)
