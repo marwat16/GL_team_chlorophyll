@@ -1,0 +1,6 @@
+# Made by setup.sh and by the runs
+.venv-era/
+.venv-human/
+zapbench-src/
+data/
+runs/
