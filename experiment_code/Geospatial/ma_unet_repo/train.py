@@ -17,7 +17,7 @@ if __name__ == "__main__":
     pretrained = False
     input_shape = [256, 256]
     Epoch = 80
-    batch_size = 16
+    batch_size = 8
     lr = 2e-4
     VOCdevkit_path = 'VOCdevkit'
     dice_loss = True
