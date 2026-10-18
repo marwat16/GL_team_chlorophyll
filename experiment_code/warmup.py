@@ -10,7 +10,6 @@ def work(stop_time):
 
     while time.monotonic() < stop_time:
         value = (value * random.uniform(1, 10)) % random.uniform(1, 10)
-        time.sleep(1)
 
 
 def main():

@@ -15,7 +15,7 @@ from typing import Dict, List, Any, Optional
 from pathlib import Path
 from os.path import dirname, realpath
 import subprocess
-
+import shutil
 
 
 class RunnerConfig:
@@ -23,7 +23,7 @@ class RunnerConfig:
 
     # ================================ USER SPECIFIC CONFIG ================================
     """The name of the experiment."""
-    name:                       str             = "new_runner_experiment"
+    name:                       str             = "full_experiment"
 
     """The path in which Experiment Runner will create a folder with the name `self.name`, in order to store the
     results from this experiment. (Path does not need to exist - it will be created if necessary.)
@@ -35,7 +35,7 @@ class RunnerConfig:
 
     """The time Experiment Runner will wait after a run completes.
     This can be essential to accommodate for cooldown periods on some systems."""
-    time_between_runs_in_ms:    int             = 6000
+    time_between_runs_in_ms:    int             = 60000
 
     # Dynamic configurations can be one-time satisfied here before the program takes the config as-is
     # e.g. Setting some variable based on some criteria
@@ -87,23 +87,13 @@ class RunnerConfig:
         return self.run_table_model
 
     def before_experiment(self) -> None:
-        """Perform any activity required before starting the experiment here
-        Invoked only once during the lifetime of the program."""
-        pass
-
-    def before_run(self) -> None:
-        """Perform any activity required before starting a run.
-        No context is available here as the run is not yet active (BEFORE RUN)"""
-
         subprocess.run(
-            [
-                "ssh",
-                "glg4",
-                "python3 /home/gl_chlorophyll/GL_team_chlorophyll/"
-                "experiment_code/warmup.py",
-            ],
+            ["python3", "/home/gl_chlorophyll/GL_team_chlorophyll/experiment_code/warmup.py"],
             check=True,
         )
+
+    def before_run(self) -> None:
+        pass
 
     def start_run(self, context: RunnerContext) -> None:
         """Perform any activity required for starting the run here.
@@ -131,11 +121,7 @@ class RunnerConfig:
         )
 
         self.profiler_process = subprocess.Popen(
-            [
-                "ssh",
-                "glg4",
-                remote_cmd
-            ],
+            ["bash", "-c", remote_cmd],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True
@@ -145,26 +131,15 @@ class RunnerConfig:
         """Perform any interaction with the running target system here, or block here until the target finishes."""
         stdout, stderr = self.profiler_process.communicate()
 
-        if self.profiler_process.returncode != 0:
-            raise RuntimeError(
-                f"Remote EnergiBridge failed:\n{stderr}"
-            )
+        self.run_failed = self.profiler_process.returncode != 0
+        if self.run_failed:
+            (context.run_dir / "error.log").write_text(stderr)
+            output.console_log(f"Run failed, see {context.run_dir / 'error.log'}")
 
     def stop_measurement(self, context: RunnerContext) -> None:
-        """Perform any activity here required for stopping measurements."""
         local_file = context.run_dir / "energibridge.csv"
-
-        with open(local_file, "wb") as f:
-            subprocess.run(
-                [
-                    "ssh",
-                    "glg4",
-                    "cat",
-                    self.remote_energy_file
-                ],
-                stdout=f,
-                check=True
-            )
+        if Path(self.remote_energy_file).exists():
+            shutil.copy(self.remote_energy_file, local_file)
 
     def stop_run(self, context: RunnerContext) -> None:
         """Perform any activity here required for stopping the run.
@@ -175,6 +150,8 @@ class RunnerConfig:
         """Parse and process any measurement data here.
         You can also store the raw measurement data under `context.run_dir`
         Returns a dictionary with keys `self.run_table_model.data_columns` and their values populated"""
+        if self.run_failed or not (context.run_dir / "energibridge.csv").exists():
+            return {column: None for column in self.run_table_model.data_columns}
         
         csv_file = context.run_dir / "energibridge.csv"
 
