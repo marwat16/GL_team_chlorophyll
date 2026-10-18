@@ -1,0 +1,13 @@
+# Tested with Python 3.12. Exact versions so both treatments always run with
+# the same libraries (a fixed factor of the experiment).
+lightgbm==4.7.0
+numpy==2.4.4
+pandas==2.3.3
+scipy==1.17.1
+scikit-learn==1.8.0
+pyarrow==25.0.1
+tqdm==4.70.1
+pymmwr==0.2.2
+# Human treatment, pinned to the commit used in the pilot.
+# idmodels pulls in iddata, sarix and timeseriesutils at fixed commits.
+idmodels @ git+https://github.com/reichlab/idmodels@bffe814c4af0d4aa4ede81e9e7ca2fcede537264

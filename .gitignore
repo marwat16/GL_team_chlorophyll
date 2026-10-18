@@ -36,3 +36,14 @@ experiment_code/Geospatial/data/
 experiment_code/Geospatial/ma_unet_repo/VOCdevkit/VOC2007/JPEGImages/
 experiment_code/Geospatial/ma_unet_repo/VOCdevkit/VOC2007/SegmentationClass/
 experiment_code/Geospatial/ma_unet_repo/logs/
+
+# Covid19
+experiment_code/Covid19/.venv/
+experiment_code/Covid19/covid19-forecast-hub/
+experiment_code/Covid19/runs_*.jsonl
+
+# scRNA
+experiment_code/scRNA/.venv/
+experiment_code/scRNA/datasets/
+experiment_code/scRNA/*.h5ad
+experiment_code/scRNA/runs_*.jsonl
