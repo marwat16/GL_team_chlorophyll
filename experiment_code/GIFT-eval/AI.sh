@@ -8,4 +8,4 @@ elif [ -f .venv/Scripts/activate ]; then source .venv/Scripts/activate
 fi
 
 cd notebooks
-python era_run.py --out_dir era
+python era_run.py --out_dir "era_$(date +%Y%m%d_%H%M%S)"

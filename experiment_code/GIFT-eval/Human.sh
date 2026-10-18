@@ -8,4 +8,4 @@ elif [ -f .venv/Scripts/activate ]; then source .venv/Scripts/activate
 fi
 
 cd notebooks
-python ttm.py --out_dir ttm
+python ttm.py --out_dir "ttm_$(date +%Y%m%d_%H%M%S)"
