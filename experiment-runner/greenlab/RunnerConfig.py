@@ -94,7 +94,16 @@ class RunnerConfig:
     def before_run(self) -> None:
         """Perform any activity required before starting a run.
         No context is available here as the run is not yet active (BEFORE RUN)"""
-        pass
+
+        subprocess.run(
+            [
+                "ssh",
+                "glg4",
+                "python3 /home/gl_chlorophyll/GL_team_chlorophyll/"
+                "experiment_code/warmup.py",
+            ],
+            check=True,
+        )
 
     def start_run(self, context: RunnerContext) -> None:
         """Perform any activity required for starting the run here.
