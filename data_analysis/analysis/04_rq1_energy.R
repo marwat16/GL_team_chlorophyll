@@ -60,42 +60,16 @@ rq12$p_bh[eqr_tested] <- tail(rq1_bh, length(eqr_tested))
 
 
 # ---- Report table RQ1.1 --------------------------------------------------------------------------
-# Columns that are the same for every task go into the caption
-cv_max <- runs |>
-  group_by(task, treatment) |>
-  summarise(cv = 100 * sd(energy_J) / mean(energy_J), .groups = "drop") |>
-  pull(cv) |>
-  max()
 t11 <- rq11 |>
   mutate(centre_ai = centre_ai / 1000, centre_human = centre_human / 1000) |>
   tex_tests() |>
   select(-Variable) |>
   rename(`AI (kJ)` = AI, `Human (kJ)` = Human)
-t11 <- squeeze_tests(t11, paste("RQ1.1, energy per run, AI versus human in each task.",
-                                centre_sentence(rq11)))
-
-d_note <- ""
-if (any(grepl("Cohen", rq11$effect))) {
-  d_note <- sprintf(paste(
-    "Cohen's d is so large because the coefficient of variation within a group is at most %s%%,",
-    "so even small differences between the means are many standard deviations wide."),
-    fmt_sig(cv_max, 3))
-}
-# Which tests share the correction, said in the caption of each RQ1 table (`here` is the table's own)
-holm_note <- function(here) {
-  sprintf(paste("Holm and Benjamini-Hochberg adjust over the %d tests of RQ1,",
-                "the %d energy tests%s and the %d EQR tests%s."),
-          length(rq1_p), nrow(rq11), if (here == "energy") " here" else " of RQ1.1",
-          length(eqr_tested), if (here == "eqr") " here" else "")
-}
-save_table(rq11, "04_rq1_1_energy_tests", paste(t11$caption, holm_note("energy"), d_note), tex = t11$tex,
-           wide = TRUE)
+t11 <- squeeze_tests(t11, paste("RQ1.1, energy per run in each task.", centre_sentence(rq11)))
+save_table(rq11, "04_rq1_1_energy_tests", t11$caption, tex = t11$tex, wide = TRUE)
 
 
 # ---- Report table RQ1.2 --------------------------------------------------------------------------
-eqr_metrics <- rq12 |> filter(!is.na(EQR)) |> pull(quality_metric) |> unique()
-stopifnot("the caption below assumes lower-is-better quality scores" =
-            all(filter(runs, quality_metric %in% eqr_metrics)$quality_lower_is_better))
 no_quality <- rq12 |> filter(is.na(EQR)) |> pull(task)
 
 t12 <- rq12 |>
@@ -105,17 +79,13 @@ t12 <- rq12 |>
             `$R_E$` = fmt_sig(R_E), `$R_Q$` = fmt_sig(R_Q), `EQR [95% CI]` = fmt_ci(EQR, EQR_lo, EQR_hi),
             `p (Holm)` = fmt_p(p_holm), `p (BH)` = fmt_p(p_bh))
 no_quality_sentence <- if (length(no_quality)) {
-  paste0(and_list(no_quality), " have no measured quality score and no EQR.")
+  paste0(and_list(no_quality), " have no quality score from our runs.")
 } else {
   ""
 }
-save_table(rq12, "04_rq1_2_eqr", paste0(
-  "RQ1.2, energy-to-quality ratio EQR = $R_E/R_Q$ with its 95% bootstrap interval. ",
-  "$R_E$ is the AI mean energy divided by the human mean energy. ",
-  "Quality is the mean measured score, and ", and_list(QUALITY_LONG[eqr_metrics]),
-  " are errors where lower is better, ",
-  "so $R_Q$ is the human mean score divided by the AI mean score and $R_Q > 1$ means ",
-  "the AI result is better. ",
-  "EQR $< 1$ means AI needs less energy for the quality it reaches. ",
-  holm_note("eqr"), " ", no_quality_sentence),
+save_table(rq12, "04_rq1_2_eqr", paste(
+  "RQ1.2, energy-to-quality ratio EQR = $R_E/R_Q$ with its 95% bootstrap interval, where quality is the mean",
+  "score of our runs and MASE is relative to a seasonal naive forecast.",
+  "$R_Q > 1$ means the AI result is better and EQR $< 1$ that AI needs less energy for the quality it",
+  "reaches.", no_quality_sentence),
   tex = t12, wide = TRUE)

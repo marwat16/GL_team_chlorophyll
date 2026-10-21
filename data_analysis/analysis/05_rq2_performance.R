@@ -21,11 +21,11 @@ rq2 <- run_tests(runs, c(time = "time_s", cpu = "cpu_pct_mean", gpu = "gpu_pct_m
 t2 <- tex_tests(rq2) |>
   mutate(Variable = recode(Variable, time = "Time (s)", cpu = "CPU (%)", gpu = "GPU (%)",
                            memory = "Memory increase (MiB)"))
+gpu_tasks <- and_list(as.character(filter(rq2, variable == "gpu")$task))
 t2 <- squeeze_tests(t2, paste(
-  "RQ2, execution time, mean CPU and GPU utilization and memory increase per run, AI versus human in",
-  "each task.",
-  centre_sentence(rq2),
-  "GPU utilization is tested only in the two tasks that use the GPU in both treatments."))
+  "RQ2, execution time, mean CPU utilization and memory increase per run in each task, and mean GPU",
+  sprintf("utilization in %s, where both treatments use the GPU.", gpu_tasks),
+  centre_sentence(rq2)))
 save_table(rq2, "05_rq2_performance_tests", t2$caption, tex = t2$tex, wide = TRUE)
 
 
@@ -62,14 +62,5 @@ p <- plot_grid(time_row(ylab = "Time (s)"),
                label_colour = INK, hjust = 0, label_x = 0.002)
 save_plot(p, "05_rq2_by_task", h = 6.2, use = "report", caption = paste(
   "RQ2 per task, (a) execution time, (b) mean CPU utilization, (c) mean GPU utilization and (d) memory",
-  "increase per run of the AI and the human implementation.",
-  "The bar and its label give the median, each point is one run and the panel title says which",
-  "treatment has the higher median and by what factor.",
-  "Time and memory have their own y-axis from 0 in every panel, CPU and GPU utilization share one 0 to",
-  "100% scale.",
-  sprintf(paste("The dashed line in (b) marks one fully busy hardware thread (%s%% of the %d threads of",
-                "the Intel Core i9-11900KF)."),
-          fmt_sig(ONE_THREAD), THREADS),
-  sprintf("%s run on the CPU only, so their GPU panels in (c) are empty.", and_list(cpu_only)),
-  "Memory is the increase of the used main memory of the whole machine from the start to the peak of a",
-  "run, without GPU memory."))
+  "increase per run.", BY_TASK_NOTE,
+  sprintf("The dashed line in (b) marks one of the %d hardware threads at full load.", THREADS)))

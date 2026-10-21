@@ -83,24 +83,11 @@ p <- ggplot(forest, aes(ratio, task)) +
   theme(panel.grid.major.y = element_blank(), panel.spacing = unit(14, "pt"),
         axis.text.y = element_text(colour = INK, size = rel(0.95)))
 
-# Whether the interval bars are visible next to the points. A point is about 2 mm wide and a panel
-# about 19 mm wide for 3.3 decades of the log axis, so a point covers about 0.35 decades.
-POINT_DECADES <- 0.35
-ci_width <- log10(forest$ratio_hi / forest$ratio_lo)
-ci_note <- if (all(ci_width < POINT_DECADES)) {
-  "All 95% bootstrap intervals are narrower than the points and are given in the test tables."
-} else {
-  "The bar is the 95% bootstrap interval where it is wider than the point."
-}
-any_log <- any(c(tests$rq11$ratio_of, tests$rq2$ratio_of) == "geometric means", na.rm = TRUE)
 save_plot(p, "08_forest_ratios", h = 2.6, use = "report", caption = paste(
-  "Ratio of the AI value to the human value for every variable and task, on one shared log axis.",
-  "For energy, time, CPU, GPU, memory and power the ratio is that of the medians",
-  if (any_log) "or, where the test ran on log values, of the geometric means." else "per run.",
-  "EQR is the energy-to-quality ratio built from the means, and a value below 1 means AI needs less",
-  "energy for the quality it reaches.",
-  ci_note,
-  "Mean power is shown because energy is power times time, but it is not tested."))
+  "Ratio of the AI value to the human value of every variable in each task, on a log axis.",
+  "A ratio below 1 means the AI value is lower, and an EQR below 1 that AI needs less energy for the quality",
+  "it reaches.",
+  "Mean power is not tested."))
 
 
 # ---- Direction count (Section 4.5) ---------------------------------------------------------------
@@ -164,10 +151,8 @@ desc_energy <- runs |>
             min_kJ = min(energy_kJ), median_kJ = median(energy_kJ), max_kJ = max(energy_kJ),
             .groups = "drop")
 decimals <- pmax(0, 1 - floor(log10(desc_energy$sd_kJ)))
-save_table(desc_energy, "08_descriptives_energy", paste(
+save_table(desc_energy, "08_descriptives_energy",
   "Energy per run in kJ per task and treatment. CV is the coefficient of variation.",
-  "Mean, SD, minimum, median and maximum are given to the decimal place of the second significant",
-  "digit of the SD."),
   wide = TRUE,
   tex = desc_energy |>
     transmute(Task = task, Treatment = treatment, n = as.character(n),
@@ -184,27 +169,16 @@ desc_perf <- runs |>
             gpu_pct_mean = mean(gpu_pct_mean), mem_MiB_mean = mean(mem_MiB), mem_MiB_sd = sd(mem_MiB),
             gpu_mem_MiB_mean = mean(gpu_mem_peak_MiB), quality_metric = first(quality_metric),
             quality_mean = mean(quality), .groups = "drop")
-# GPU memory of the treatments that do not use the GPU, i.e. what is in use when the GPU is idle
-gpu_idle <- runs |>
-  group_by(task, treatment) |>
-  filter(all(gpu_pct_mean == 0)) |>
-  pull(gpu_mem_peak_MiB) |>
-  median()
-q_tasks <- desc_perf |> filter(!is.na(quality_mean)) |> distinct(task, quality_metric)
+q_metrics <- desc_perf |> filter(!is.na(quality_mean)) |> pull(quality_metric) |> unique()
 stopifnot("the caption below assumes lower-is-better quality scores" =
-            all(filter(runs, quality_metric %in% q_tasks$quality_metric)$quality_lower_is_better))
-unmeasured <- unique(as.character(desc_perf$task[is.na(desc_perf$quality_mean)]))
+            all(filter(runs, quality_metric %in% q_metrics)$quality_lower_is_better))
 save_table(desc_perf, "08_descriptives_performance", paste(
-  "Performance metrics and quality per task and treatment, as means over the runs.",
-  "CPU and GPU give the mean utilization.",
-  "Time gives the coefficient of variation in brackets.",
-  "Memory is the increase of the used main memory of the whole machine during a run.",
-  "GPU memory is the peak memory in use on the GPU during a run, which includes the",
-  sprintf("%s MiB in use when the GPU is idle.", fmt_sig(gpu_idle)),
-  "A dash marks a treatment that does not use the GPU.",
-  sprintf("Quality is the measured score, %s, and lower is better for all of them.",
-          and_list(paste(QUALITY_LONG[q_tasks$quality_metric], "for", q_tasks$task))),
-  sprintf("It was not measured for %s in this experiment.", and_list(unmeasured))),
+  "Performance metrics and quality per task and treatment, as means over the runs, with the",
+  "coefficient of variation of the time in brackets.",
+  "Memory is the increase of the used main memory of the whole machine during a run and GPU memory the",
+  "peak in use on the GPU, idle use included.",
+  "A lower quality score is better, MASE is relative to a seasonal naive forecast and a dash marks an",
+  "unused GPU or a quality score missing from our runs."),
   tex = desc_perf |>
     transmute(Task = task, Treatment = treatment,
               `Time (s), mean (CV)` = paste0(fmt_sig(time_s_mean), " (", fmt_sig(time_cv_pct, 2), "%)"),

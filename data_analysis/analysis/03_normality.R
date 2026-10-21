@@ -5,7 +5,7 @@
 #
 # Input:  runs (01_load.R)
 # Output: tables 03_shapiro_wilk and 03_bestnormalize_energy, figures 03_qq_energy_time_memory,
-#         03_qq_cpu_gpu and 03_energy_density
+#         03_qq_cpu_gpu and 03_energy_density (full width and one column, _col)
 
 if (!exists("runs")) source("analysis/01_load.R")
 set.seed(SEED)
@@ -133,18 +133,11 @@ qq_plot <- function(vars) {
     theme(strip.text.y = element_text(angle = -90, hjust = 0.5, size = rel(0.85)))
 }
 qq_caption <- function(vars) paste(
-  "Normal Q-Q plots of the", and_list(LABELS[vars]), "per run (rows) in each task, with AI and human in",
-  "the same panel and the values standardized within each task and treatment.",
-  "The shaded band is the 95% pointwise band of a normal sample of the same size around the identity",
-  "line. The text gives the Shapiro-Wilk p-value of each treatment, in bold where normality is rejected",
-  "(p < 0.05).")
+  "Normal Q-Q plots of the", and_list(LABELS[vars]), "per run in each task, with the Shapiro-Wilk",
+  "p-value of each treatment (in bold where p < 0.05).")
 
 save_plot(qq_plot(c("energy", "time", "memory")), "03_qq_energy_time_memory", h = 4.4, use = "report",
-          caption = paste(
-            qq_caption(c("energy", "time", "memory")),
-            sprintf(paste("Execution time is measured on the %s s sampling grid of EnergiBridge, so runs",
-                          "of equal length form steps."),
-                    SAMPLE_S)))
+          caption = qq_caption(c("energy", "time", "memory")))
 save_plot(qq_plot(c("cpu", "gpu")), "03_qq_cpu_gpu", h = 3.1, caption = paste(
   qq_caption(c("cpu", "gpu")),
   "Implementations that do not use the GPU stay at 0% in every run and are not tested."))
@@ -192,10 +185,10 @@ p <- ggplot(group_panels(runs), aes(energy_kJ, colour = treatment, fill = treatm
   theme_report() +
   THEME_GROUPS +
   theme(axis.text.y = element_blank(), panel.grid.major.y = element_blank())
-save_plot(p, "03_energy_density", h = 3.2, use = "report", caption = paste(
-  "Distribution of the energy per run for each task and treatment as a kernel density estimate, each",
-  "panel on its own scale.",
-  "The ticks at the bottom are the single runs and the label gives the coefficient of variation (CV),",
-  "as in the descriptive energy table.",
-  "Runs that lie very close together share one darker tick.",
-  "With 10 or 20 runs per group, a small bump or shoulder in a curve rests on only a few runs."))
+density_caption <- paste(
+  "Distribution of the energy per run in each task and treatment as a kernel density estimate.",
+  "The ticks are the single runs and CV is the coefficient of variation.")
+save_plot(p, "03_energy_density", h = 3.2, use = "report", caption = density_caption)
+# The same figure in one column, one task per row with AI on the left and human on the right
+save_plot(p + facet_wrap(~panel, ncol = 2, dir = "v", scales = "free"), "03_energy_density_col", w = COL_W,
+          h = 4.4, use = "report", caption = density_caption)

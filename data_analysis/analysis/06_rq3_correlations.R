@@ -6,7 +6,8 @@
 # Holm and Benjamini-Hochberg over all coefficients) are kept in the CSV only.
 #
 # Input:  runs (01_load.R)
-# Output: table 06_rq3_correlations, figures 06_rq3_coefficients and 06_energy_vs_* (one per metric)
+# Output: table 06_rq3_correlations, figures 06_rq3_coefficients (full width and one column, _col) and
+#         06_energy_vs_* (one per metric)
 
 if (!exists("runs")) source("analysis/01_load.R")
 
@@ -63,10 +64,9 @@ rq3_tex <- rq3 |>
   arrange(task, treatment) |>
   rename(Task = task, Treatment = treatment)
 save_table(rq3, "06_rq3_correlations", paste(
-  "RQ3, correlation of energy with each performance metric per task and treatment, with its 95% interval",
-  "(Fisher z). The coefficient is Pearson's r, or Spearman's rho where marked with a dagger because one of",
-  "the two variables is not normal. A dash marks a group in which the metric takes fewer than three",
-  "distinct values."),
+  "RQ3, correlation of energy with each performance metric per task and treatment, with its 95% interval.",
+  "The coefficient is Pearson's $r$, or Spearman's $\\rho$ where marked with $^\\dagger$.",
+  "A dash marks a metric with fewer than three distinct values."),
   tex = rq3_tex, wide = TRUE)
 
 
@@ -113,12 +113,14 @@ p <- ggplot(coef_data, aes(r, y, colour = treatment)) +
   labs(x = "Correlation with energy per run (Pearson r or Spearman \u03c1, 95% interval)", y = NULL) +
   theme_report() +
   theme(panel.grid.major.y = element_blank(), axis.text.y = element_text(colour = INK, size = rel(0.95)))
-save_plot(p, "06_rq3_coefficients", h = 2.6, use = "report", caption = paste(
-  "Correlation of the energy per run with each performance metric, per task and treatment.",
-  "The point is the coefficient and the line its 95% interval. Filled points are Pearson's r and open",
-  "points Spearman's rho, which is used where one of the two variables is not normal.",
-  "Groups in which a metric is the same in every run have no coefficient.",
-  "The exact values are in the RQ3 table."))
+coef_caption <- paste(
+  "Correlation of the energy per run with each performance metric per task and treatment, with its 95%",
+  "interval. Filled points are Pearson's r and open points Spearman's rho.")
+save_plot(p, "06_rq3_coefficients", h = 2.6, use = "report", caption = coef_caption)
+# The same figure in one column, with two metrics per row and the axis title on two lines
+p <- p + facet_wrap(~metric, nrow = 2, drop = FALSE) +
+  labs(x = "Correlation with energy per run\n(Pearson r or Spearman \u03c1, 95% interval)")
+save_plot(p, "06_rq3_coefficients_col", w = COL_W, h = 3.9, use = "report", caption = coef_caption)
 
 
 # ---- Scatter plots (Lab 3 step 5.4, lecture 07-A) ------------------------------------------------

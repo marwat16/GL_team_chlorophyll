@@ -3,7 +3,7 @@
 # (drift over the execution order and heat carried over from the previous run).
 #
 # Input:  runs (01_load.R)
-# Output: figures 02_energy_by_task and 02_energy_vs_start_temp,
+# Output: figures 02_energy_by_task (full width and one column, _col) and 02_energy_vs_start_temp,
 #         table 02_carry_over
 #
 # Tasks differ by up to 1,500x in energy, so the energy figure has one panel per task with its own
@@ -12,22 +12,17 @@
 
 if (!exists("runs")) source("analysis/01_load.R")
 
-energy_cv <- runs |>
-  group_by(task, treatment) |>
-  summarise(cv = 100 * sd(energy_J) / mean(energy_J), .groups = "drop")
-
 # Axis labels for a deviation in percent, with an explicit sign
 signed_pct <- function(x) paste0(ifelse(x > 0, "+", ifelse(x < 0, MINUS_SIGN, "")), abs(x), "%")
 
 
 # ---- Energy of every run per task (Lab 3 step 2.2, report) ---------------------------------------
+energy_caption <- paste("Energy per run of the AI and the human implementation in each task.", BY_TASK_NOTE)
 p <- plot_by_task(runs, "energy_kJ", "Energy per run (kJ)", unit = "kJ")
-save_plot(p, "02_energy_by_task", h = 2.5, use = "report", caption = paste(
-  "Energy per run of the AI and the human implementation in each task.", BY_TASK_NOTE,
-  sprintf(paste("Within a group the runs differ very little (coefficient of variation at most %s%%),",
-                "so the points overlap and a box plot would shrink to a line. The shape of each",
-                "distribution is shown in the density figure."),
-          fmt_sig(max(energy_cv$cv), 3))))
+save_plot(p, "02_energy_by_task", h = 2.5, use = "report", caption = energy_caption)
+# The same figure in one column, with two tasks per row
+p <- plot_by_task(runs, "energy_kJ", "Energy per run (kJ)", unit = "kJ", nrow = 3)
+save_plot(p, "02_energy_by_task_col", w = COL_W, h = 4.6, use = "report", caption = energy_caption)
 
 
 # ---- Drift over the execution order (Lab 3 step 2.3, threats) ------------------------------------

@@ -38,15 +38,11 @@ dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
 TASK_KEYS <- c("scRNA", "Covid19", "Geospatial", "GIFT-eval", "ZapBench")
 TASKS <- c("scRNA-seq", "COVID-19", "Geospatial", "GIFT-Eval", "ZAPBench")
 
-# Short names of the quality metrics for tables, and how a caption describes them
+# Short names of the quality metrics for tables
 QUALITY_LABELS <- c(`wis_era_2025-02-01` = "WIS",
                     gmean_MASE_rel_seasonal_naive_2cfg = "MASE",
                     test_mae_avg8 = "test MAE",
                     test_mIoU_420 = "test mIoU")
-QUALITY_LONG <- c(`wis_era_2025-02-01` = "WIS",
-                  gmean_MASE_rel_seasonal_naive_2cfg = "MASE relative to a seasonal naive forecast",
-                  test_mae_avg8 = "test MAE",
-                  test_mIoU_420 = "test mIoU")
 
 ALPHA <- 0.05
 B <- 10000      # bootstrap resamples
@@ -69,6 +65,7 @@ MUTED <- "#898781"
 GRID <- "#e1e0d9"
 AXIS <- "#c3c2b7"
 FULL_W <- 7
+COL_W <- 3.33
 TIMES <- "\u00d7"
 MINUS_SIGN <- "\u2212"
 minus_labels <- scales::label_number(style_negative = "minus", big.mark = ",")  # real minus on axes
@@ -234,20 +231,6 @@ save_table <- function(df, name, caption, tex = NULL, wide = FALSE) {
   write_file(latex, file.path("output/tables", paste0(name, ".tex")))
 }
 
-# Columns of a report table that hold the same value in every row are moved into the caption as a
-# sentence, which keeps the tables narrow enough for the two-column layout
-squeeze <- function(tex, caption, sentences) {
-  for (col in intersect(names(sentences), names(tex))) {
-    v <- unique(tex[[col]])
-    if (length(v) == 1) {
-      caption <- paste(caption, sprintf(sentences[[col]], v))
-      tex[[col]] <- NULL
-    }
-  }
-  list(tex = tex, caption = caption)
-}
-
-
 # ---- The test rule of Section 4.5 ----------------------------------------------------------------
 # Shapiro-Wilk p-value, NA when a group has fewer than three distinct values (for example the GPU
 # usage of a CPU-only task, which is 0 in every run)
@@ -321,22 +304,32 @@ tex_tests <- function(df, digits = 3) {
               `Estimate [95% CI]` = fmt_ci(es, es_lo, es_hi), Magnitude = magnitude)
 }
 
-# Caption sentences for the columns of tex_tests() that are the same in every row
-TEST_SENTENCES <- c(Test = "Every comparison uses %s.",
-                    `p (Holm)` = "Every Holm-adjusted p-value is %s.",
-                    `p (BH)` = "Every Benjamini-Hochberg adjusted p-value is %s.",
-                    `Effect size` = "The effect size is %s.",
-                    Magnitude = "Every effect is %s.")
-
-# squeeze() for a tex_tests() table. When every row has the same effect size, its name goes in the
-# header.
+# Columns of a tex_tests() table that hold the same value in every row are left out and said once in
+# a sentence of the caption, which keeps the tables narrow enough for the two-column layout. When every
+# row has the same effect size, its name goes in the header.
 squeeze_tests <- function(tex, caption) {
-  eff <- unique(tex$`Effect size`)
-  out <- squeeze(tex, caption, TEST_SENTENCES)
-  if (length(eff) == 1) {
-    names(out$tex)[names(out$tex) == "Estimate [95% CI]"] <- paste(eff, "[95% CI]")
+  same <- function(col) col %in% names(tex) && n_distinct(tex[[col]]) == 1
+  value <- function(col) tex[[col]][1]
+  p_holm <- if (same("p (Holm)")) value("p (Holm)")
+  p_bh <- if (same("p (BH)")) value("p (BH)")
+  clauses <- c(
+    if (same("Test")) paste("every comparison uses", value("Test")),
+    if (!is.null(p_holm) && identical(p_holm, p_bh)) {
+      paste("every Holm and Benjamini-Hochberg adjusted p-value is", p_holm)
+    } else {
+      c(if (!is.null(p_holm)) paste("every Holm-adjusted p-value is", p_holm),
+        if (!is.null(p_bh)) paste("every Benjamini-Hochberg adjusted p-value is", p_bh))
+    },
+    if (same("Magnitude")) paste("every effect is", value("Magnitude")))
+  if (same("Effect size")) {
+    names(tex)[names(tex) == "Estimate [95% CI]"] <- paste(value("Effect size"), "[95% CI]")
   }
-  out
+  constant <- Filter(same, c("Test", "p (Holm)", "p (BH)", "Effect size", "Magnitude"))
+  if (length(clauses)) {
+    sentence <- and_list(clauses)
+    caption <- paste0(caption, " ", toupper(substr(sentence, 1, 1)), substring(sentence, 2), ".")
+  }
+  list(tex = select(tex, -all_of(constant)), caption = caption)
 }
 
 # What the AI and Human columns hold, depending on which tests were used
@@ -360,10 +353,11 @@ centre_sentence <- function(df) {
 # "%s %s more" gives "AI 2.73x more".
 # show_task = FALSE leaves the task name out of the panel title (the lower rows of a stacked figure).
 # Tasks without runs in `data` keep an empty panel titled `empty_title` with `empty_note` inside, and
-# `ref_line` draws a dashed horizontal reference line.
+# `ref_line` draws a dashed horizontal reference line. `nrow` sets the number of panel rows (3 in the
+# one-column energy figure), and then every panel keeps its own AI and Human labels under it.
 plot_by_task <- function(data, var, ylab, unit = "", percent = FALSE, phrase = "%s %s more",
                          zero = "AI uses none", show_task = TRUE, empty_title = "", empty_note = NULL,
-                         ref_line = NULL) {
+                         ref_line = NULL, nrow = 1) {
   d <- mutate(data, y = .data[[var]])
   med <- d |>
     group_by(task, treatment) |>
@@ -401,7 +395,7 @@ plot_by_task <- function(data, var, ylab, unit = "", percent = FALSE, phrase = "
                label.r = unit(0, "pt")) +
     geom_text(data = notes, aes(x = 1.5, y = if (percent) 50 else 0, label = label), size = 2.2,
               colour = MUTED, fontface = "italic", inherit.aes = FALSE) +
-    facet_wrap(~task, nrow = 1, scales = if (percent) "fixed" else "free_y", drop = FALSE,
+    facet_wrap(~task, nrow = nrow, scales = if (percent) "fixed" else "free_y", drop = FALSE, axes = "all_x",
                labeller = as_labeller(titles)) +
     scale_y_continuous(expand = expansion(mult = c(0, if (percent) 0.12 else 0.16)),
                        labels = scales::label_comma(),
@@ -415,9 +409,7 @@ plot_by_task <- function(data, var, ylab, unit = "", percent = FALSE, phrase = "
 }
 
 # Shared caption sentence for these figures
-BY_TASK_NOTE <- paste(
-  "The bar and its label give the median and each point is one run. Every task has its own y-axis",
-  "starting at 0, and the panel title says which treatment has the higher median and by what factor.")
+BY_TASK_NOTE <- "The bar gives the median and each point is one run."
 
 # Panel label "task, treatment" with AI panels first, used by the ten-panel figures (density and
 # scatter). All ten levels are kept so that AI and Human of a task stay in the same column.

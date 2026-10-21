@@ -67,7 +67,7 @@ results. The R step reads only the committed `data/processed/runs_all.csv`, so i
 | `analysis/06_rq3_correlations.R` | RQ3, correlation of energy with each performance metric |
 | `analysis/07_models.R` | One model over all tasks, as an alternative to the per-task tests |
 | `analysis/08_summary.R` | Forest plot of the AI/human ratios and the descriptive tables |
-| `output/figures/` | Figures as PDF and PNG. `captions.csv` gives each caption and where it is used |
+| `output/figures/` | Figures as PDF and PNG, a name ending in `_col` is the one-column version of a figure. `captions.csv` gives each caption and where it is used |
 | `output/tables/` | Tables as CSV and LaTeX |
 
 ## Playing with the data
