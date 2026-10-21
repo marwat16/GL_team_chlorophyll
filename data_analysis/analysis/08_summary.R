@@ -84,10 +84,10 @@ p <- ggplot(forest, aes(ratio, task)) +
         axis.text.y = element_text(colour = INK, size = rel(0.95)))
 
 save_plot(p, "08_forest_ratios", h = 2.6, use = "report", caption = paste(
-  "Ratio of the AI value to the human value of every variable in each task, on a log axis.",
+  "Ratio of the AI value to the human value of each variable in each task, on a log axis.",
   "A ratio below 1 means the AI value is lower, and an EQR below 1 that AI needs less energy for the quality",
   "it reaches.",
-  "Mean power is not tested."))
+  "Mean power is not tested, and a cell without a ratio gives the reason."))
 
 
 # ---- Direction count (Section 4.5) ---------------------------------------------------------------
