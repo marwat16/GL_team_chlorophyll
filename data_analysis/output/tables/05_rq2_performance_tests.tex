@@ -1,0 +1,30 @@
+\begin{table*}[ht]
+\centering
+\caption{RQ2, execution time, mean CPU and GPU utilization and memory increase per run, AI versus human in each task. AI and Human give the median per run and AI/Human is their ratio with a 95\% bootstrap interval. GPU utilization is tested only in the two tasks that use the GPU in both treatments. Every Holm-adjusted p-value is $<$ 0.001. Every Benjamini-Hochberg adjusted p-value is $<$ 0.001. Every effect is large.} 
+\label{tab:05_rq2_performance_tests}
+\begingroup\small
+\begin{tabular}{llrrrllr}
+  \toprule
+Task & Variable & AI & Human & AI/Human [95\% CI] & Test & Effect size & Estimate [95\% CI] \\ 
+  \midrule
+scRNA-seq & Time (s) & 18.3 & 11.6 & 1.58 [1.55, 1.59] & Mann-Whitney U test & Cliff's delta & 1.00 [0.995, 1.00] \\ 
+  COVID-19 & Time (s) & 10.5 & 335 & 0.0313 [0.0312, 0.0318] & Welch's t-test & Cohen's d & $-$477 [$-$635, $-$318] \\ 
+  Geospatial & Time (s) & 1,640 & 4,590 & 0.358 [0.358, 0.359] & Welch's t-test & Cohen's d & $-$704 [$-$938, $-$470] \\ 
+  GIFT-Eval & Time (s) & 453 & 5,650 & 0.0802 [0.0798, 0.0806] & Welch's t-test & Cohen's d & $-$1,740 [$-$2,320, $-$1,160] \\ 
+  ZAPBench & Time (s) & 451 & 112 & 4.03 [4.02, 4.08] & Mann-Whitney U test & Cliff's delta & 1.00 [0.995, 1.00] \\ 
+  scRNA-seq & CPU (\%) & 76.5 & 20.2 & 3.78 [3.74, 3.86] & Welch's t-test & Cohen's d & 115 [89.1, 141] \\ 
+  COVID-19 & CPU (\%) & 89.0 & 50.1 & 1.78 [1.76, 1.79] & Welch's t-test & Cohen's d & 83.2 [55.6, 111] \\ 
+  Geospatial & CPU (\%) & 9.71 & 12.9 & 0.754 [0.748, 0.758] & Welch's t-test & Cohen's d & $-$43.5 [$-$58.0, $-$29.0] \\ 
+  GIFT-Eval & CPU (\%) & 6.79 & 8.72 & 0.778 [0.778, 0.780] & Welch's t-test & Cohen's d & $-$233 [$-$311, $-$156] \\ 
+  ZAPBench & CPU (\%) & 5.68 & 8.40 & 0.676 [0.673, 0.679] & Welch's t-test & Cohen's d & $-$34.7 [$-$42.6, $-$26.8] \\ 
+  Geospatial & GPU (\%) & 95.1 & 89.3 & 1.06 [1.06, 1.07] & Welch's t-test & Cohen's d & 48.3 [32.2, 64.4] \\ 
+  ZAPBench & GPU (\%) & 92.6 & 43.0 & 2.16 [2.13, 2.17] & Welch's t-test & Cohen's d & 87.1 [67.4, 107] \\ 
+  scRNA-seq & Memory increase (MiB) & 1,560 & 509 & 3.06 [2.95, 3.38] & Mann-Whitney U test & Cliff's delta & 1.00 [0.995, 1.00] \\ 
+  COVID-19 & Memory increase (MiB) & 158 & 373 & 0.424 [0.382, 0.474] & Welch's t-test & Cohen's d & $-$11.2 [$-$15.0, $-$7.33] \\ 
+  Geospatial & Memory increase (MiB) & 2,420 & 5,990 & 0.404 [0.394, 0.413] & Mann-Whitney U test & Cliff's delta & $-$1.00 [$-$1.00, $-$0.974] \\ 
+  GIFT-Eval & Memory increase (MiB) & 614 & 8,770 & 0.0700 [0.0673, 0.0709] & Mann-Whitney U test & Cliff's delta & $-$1.00 [$-$1.00, $-$0.974] \\ 
+  ZAPBench & Memory increase (MiB) & 5,050 & 4,500 & 1.12 [1.11, 1.14] & Mann-Whitney U test & Cliff's delta & 0.935 [0.711, 0.987] \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table*}

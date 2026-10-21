@@ -1,0 +1,23 @@
+\begin{table*}[ht]
+\centering
+\caption{Performance metrics and quality per task and treatment, as means over the runs. CPU and GPU give the mean utilization. Time gives the coefficient of variation in brackets. Memory is the increase of the used main memory of the whole machine during a run. GPU memory is the peak memory in use on the GPU during a run, which includes the 389 MiB in use when the GPU is idle. A dash marks a treatment that does not use the GPU. Quality is the measured score, WIS for COVID-19, MASE relative to a seasonal naive forecast for GIFT-Eval and test MAE for ZAPBench, and lower is better for all of them. It was not measured for scRNA-seq and Geospatial in this experiment.} 
+\label{tab:08_descriptives_performance}
+\begingroup\small
+\begin{tabular}{llrrrrrrl}
+  \toprule
+Task & Treatment & Time (s), mean (CV) & Power (W) & CPU (\%) & GPU (\%) & Memory increase (MiB) & GPU memory (MiB) & Quality \\ 
+  \midrule
+scRNA-seq & AI & 18.4 (0.67\%) & 164 & 76 & – & 1,610 & – & – \\ 
+  scRNA-seq & Human & 11.7 (0.83\%) & 94.5 & 20 & – & 504 & – & – \\ 
+  COVID-19 & AI & 10.5 (1.1\%) & 145 & 89 & – & 157 & – & WIS 38.2 \\ 
+  COVID-19 & Human & 335 (0.29\%) & 171 & 50 & – & 371 & – & WIS 24.7 \\ 
+  Geospatial & AI & 1,640 (0.12\%) & 269 & 9.7 & 95 & 2,370 & 4,590 & – \\ 
+  Geospatial & Human & 4,590 (0.12\%) & 278 & 13 & 89 & 5,970 & 7,500 & – \\ 
+  GIFT-Eval & AI & 453 (0.57\%) & 82.7 & 6.8 & – & 608 & – & MASE 0.943 \\ 
+  GIFT-Eval & Human & 5,650 (0.060\%) & 285 & 8.7 & 92 & 8,700 & 3,200 & MASE 0.687 \\ 
+  ZAPBench & AI & 451 (0.10\%) & 236 & 5.7 & 93 & 5,010 & 4,870 & test MAE 0.0268 \\ 
+  ZAPBench & Human & 111 (1.4\%) & 126 & 8.4 & 43 & 4,460 & 2,620 & test MAE 0.0291 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table*}

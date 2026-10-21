@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering
+\caption{Shapiro-Wilk p-value of the standardized energy per run before and after the transformation chosen by bestNormalize. bestNormalize ranks the transformations by the Pearson P statistic, so the Shapiro-Wilk p-value can also go down. Every group is normal without a transformation, so the analysis uses the raw values.} 
+\label{tab:03_bestnormalize_energy}
+\begingroup\small
+\begin{tabular}{lllrr}
+  \toprule
+Task & Treatment & Transformation & p before & p after \\ 
+  \midrule
+scRNA-seq & AI & square root & 0.788 & 0.334 \\ 
+  scRNA-seq & Human & centre and scale & 0.121 & 0.121 \\ 
+  COVID-19 & AI & arcsinh & 0.854 & 0.810 \\ 
+  COVID-19 & Human & square root & 0.157 & 0.560 \\ 
+  Geospatial & AI & arcsinh & 0.587 & 0.447 \\ 
+  Geospatial & Human & square root & 0.409 & 0.054 \\ 
+  GIFT-Eval & AI & arcsinh & 0.448 & 0.270 \\ 
+  GIFT-Eval & Human & arcsinh & 0.822 & 0.804 \\ 
+  ZAPBench & AI & square root & 0.299 & 0.365 \\ 
+  ZAPBench & Human & centre and scale & 0.238 & 0.238 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}

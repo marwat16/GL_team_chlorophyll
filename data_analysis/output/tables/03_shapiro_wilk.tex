@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering
+\caption{Shapiro-Wilk p-values per task and treatment on the raw scale. A p-value below 0.05 rejects normality. A dash marks a group with fewer than three distinct values (the GPU usage of implementations that run on the CPU only). On the log scale the decision is the same in every group.} 
+\label{tab:03_shapiro_wilk}
+\begingroup\small
+\begin{tabular}{llrrrrr}
+  \toprule
+Task & Treatment & Energy & Time & CPU & GPU & Memory \\ 
+  \midrule
+scRNA-seq & AI & 0.788 & $<$ 0.001 & 0.417 & – & 0.011 \\ 
+  scRNA-seq & Human & 0.121 & $<$ 0.001 & 0.536 & – & 0.268 \\ 
+  COVID-19 & AI & 0.854 & 0.054 & 0.412 & – & 0.337 \\ 
+  COVID-19 & Human & 0.157 & 0.137 & 0.647 & – & 0.659 \\ 
+  Geospatial & AI & 0.587 & 0.352 & 0.887 & 0.953 & $<$ 0.001 \\ 
+  Geospatial & Human & 0.409 & 0.865 & 0.175 & 0.167 & 0.413 \\ 
+  GIFT-Eval & AI & 0.448 & 0.622 & 0.347 & – & 0.470 \\ 
+  GIFT-Eval & Human & 0.822 & 0.711 & 0.196 & 0.235 & 0.010 \\ 
+  ZAPBench & AI & 0.299 & 0.673 & 0.995 & 0.860 & $<$ 0.001 \\ 
+  ZAPBench & Human & 0.238 & 0.003 & 0.117 & 0.098 & 0.030 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}

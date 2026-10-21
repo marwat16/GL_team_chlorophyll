@@ -1,0 +1,17 @@
+\begin{table}[ht]
+\centering
+\caption{ANOVA of log energy on treatment, task and their interaction. The residuals are close to normal (Shapiro-Wilk p = 0.319) but their spread differs between the groups (Fligner-Killeen p $<$ 0.001, residual SD from 0.0018 to 0.018 on the log scale), so the equal-variance assumption does not hold.} 
+\label{tab:07_lm_anova_log_energy}
+\begingroup\small
+\begin{tabular}{lrrrrr}
+  \toprule
+Term & Df & Sum Sq & Mean Sq & F value & Pr($>$F) \\ 
+  \midrule
+treatment & 1 & 4.03 & 4.03 & 38,100 & $<$ 0.001 \\ 
+  task & 4 & 637 & 159 & 1,500,000 & $<$ 0.001 \\ 
+  treatment:task & 4 & 189 & 47.4 & 447,000 & $<$ 0.001 \\ 
+  Residuals & 130 & 0.0138 & 0.000106 &  &  \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}

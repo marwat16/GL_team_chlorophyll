@@ -1,0 +1,18 @@
+\begin{table*}[ht]
+\centering
+\caption{RQ1.1, energy per run, AI versus human in each task. AI and Human give the median per run and AI/Human is their ratio with a 95\% bootstrap interval. Every comparison uses Welch's t-test. Every Holm-adjusted p-value is $<$ 0.001. Every Benjamini-Hochberg adjusted p-value is $<$ 0.001. The effect size is Cohen's d. Every effect is large. Holm and Benjamini-Hochberg adjust over the 8 tests of RQ1, the 5 energy tests here and the 3 EQR tests. Cohen's d is so large because the coefficient of variation within a group is at most 1.84\%, so even small differences between the means are many standard deviations wide.} 
+\label{tab:04_rq1_1_energy_tests}
+\begingroup\small
+\begin{tabular}{lrrrr}
+  \toprule
+Task & AI (kJ) & Human (kJ) & AI/Human [95\% CI] & Cohen's d [95\% CI] \\ 
+  \midrule
+scRNA-seq & 3.01 & 1.10 & 2.73 [2.69, 2.76] & 90.3 [69.9, 111] \\ 
+  COVID-19 & 1.52 & 57.0 & 0.0266 [0.0263, 0.0271] & $-$210 [$-$279, $-$140] \\ 
+  Geospatial & 442 & 1,280 & 0.346 [0.345, 0.347] & $-$381 [$-$508, $-$255] \\ 
+  GIFT-Eval & 37.6 & 1,610 & 0.0233 [0.0231, 0.0234] & $-$562 [$-$748, $-$375] \\ 
+  ZAPBench & 106 & 14.0 & 7.62 [7.57, 7.72] & 109 [84.7, 134] \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table*}

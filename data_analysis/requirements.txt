@@ -1,0 +1,5 @@
+# Python packages imported by the processing scripts (processing/*.py).
+# Tested with Python 3.12. Everything else the scripts use is in the standard library.
+# Install them into the .venv of README.md (Setup).
+numpy==2.5.4
+pandas==3.0.6

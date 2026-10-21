@@ -1,0 +1,19 @@
+variable,result,n,tasks
+energy,AI higher,2,"scRNA-seq, ZAPBench"
+energy,AI lower,3,"COVID-19, Geospatial, GIFT-Eval"
+energy,no significant difference,0,
+eqr,AI higher,1,ZAPBench
+eqr,AI lower,2,"COVID-19, GIFT-Eval"
+eqr,no significant difference,0,
+time,AI higher,2,"scRNA-seq, ZAPBench"
+time,AI lower,3,"COVID-19, Geospatial, GIFT-Eval"
+time,no significant difference,0,
+cpu,AI higher,2,"scRNA-seq, COVID-19"
+cpu,AI lower,3,"Geospatial, GIFT-Eval, ZAPBench"
+cpu,no significant difference,0,
+gpu,AI higher,2,"Geospatial, ZAPBench"
+gpu,AI lower,0,
+gpu,no significant difference,0,
+memory,AI higher,2,"scRNA-seq, ZAPBench"
+memory,AI lower,3,"COVID-19, Geospatial, GIFT-Eval"
+memory,no significant difference,0,

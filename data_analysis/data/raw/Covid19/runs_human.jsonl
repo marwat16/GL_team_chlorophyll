@@ -1,0 +1,12 @@
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.129, "method_s": 332.029, "peak_rss_mb": 493.6, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.131, "method_s": 333.848, "peak_rss_mb": 494.1, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.132, "method_s": 332.367, "peak_rss_mb": 494.3, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.13, "method_s": 332.587, "peak_rss_mb": 492.5, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.174, "method_s": 334.674, "peak_rss_mb": 481.4, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.141, "method_s": 333.78, "peak_rss_mb": 481.7, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.135, "method_s": 334.064, "peak_rss_mb": 492.9, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.167, "method_s": 334.044, "peak_rss_mb": 493.0, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.149, "method_s": 332.04, "peak_rss_mb": 490.2, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.182, "method_s": 332.002, "peak_rss_mb": 489.7, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.165, "method_s": 333.892, "peak_rss_mb": 491.3, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}
+{"treatment": "human", "ref_date": "2025-02-01", "load_s": 1.133, "method_s": 332.561, "peak_rss_mb": 482.3, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 24.74}

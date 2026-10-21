@@ -1,0 +1,16 @@
+\begin{table*}[ht]
+\centering
+\caption{RQ1.2, energy-to-quality ratio EQR = $R_E/R_Q$ with its 95\% bootstrap interval. $R_E$ is the AI mean energy divided by the human mean energy. Quality is the mean measured score, and WIS, MASE relative to a seasonal naive forecast and test MAE are errors where lower is better, so $R_Q$ is the human mean score divided by the AI mean score and $R_Q > 1$ means the AI result is better. EQR $< 1$ means AI needs less energy for the quality it reaches. Holm and Benjamini-Hochberg adjust over the 8 tests of RQ1, the 5 energy tests of RQ1.1 and the 3 EQR tests here. scRNA-seq and Geospatial have no measured quality score and no EQR.} 
+\label{tab:04_rq1_2_eqr}
+\begingroup\small
+\begin{tabular}{llrrrrrrr}
+  \toprule
+Task & Quality & AI quality & Human quality & $R_E$ & $R_Q$ & EQR [95\% CI] & p (Holm) & p (BH) \\ 
+  \midrule
+COVID-19 & WIS & 38.2 & 24.7 & 0.0267 & 0.647 & 0.0412 [0.0407, 0.0417] & $<$ 0.001 & $<$ 0.001 \\ 
+  GIFT-Eval & MASE & 0.943 & 0.687 & 0.0232 & 0.729 & 0.0319 [0.0317, 0.0321] & $<$ 0.001 & $<$ 0.001 \\ 
+  ZAPBench & test MAE & 0.0268 & 0.0291 & 7.63 & 1.09 & 7.03 [6.93, 7.12] & $<$ 0.001 & $<$ 0.001 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table*}

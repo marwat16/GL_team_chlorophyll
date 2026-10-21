@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv
+
+# R
+.Rhistory
+.RData
+Rplots.pdf
+
+# macOS
+.DS_Store

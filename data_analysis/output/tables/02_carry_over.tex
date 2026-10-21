@@ -1,0 +1,23 @@
+\begin{table}[ht]
+\centering
+\caption{Heat carried over from the previous run and drift over the execution order, per task and treatment. $R^2$ and slope belong to a least-squares line of the energy deviation from the group mean on the GPU temperature at the start of the run. $\rho$ is the Spearman correlation of the same deviation with the position in the execution order, with its p-value raw and Holm-adjusted over the ten groups. Every run lies within 3.5\% of its group mean.} 
+\label{tab:02_carry_over}
+\begingroup\small
+\begin{tabular}{llrrrrr}
+  \toprule
+Task & Treatment & $R^2$ & Slope (\%/$^\circ$C) & $\rho$ order & p order & p order (Holm) \\ 
+  \midrule
+scRNA-seq & AI & 0.56 & +0.26 & $-$0.50 & 0.025 & 0.251 \\ 
+  scRNA-seq & Human & 0.38 & +0.35 & 0.30 & 0.204 & 1.000 \\ 
+  COVID-19 & AI & 0.16 & $-$0.26 & 0.49 & 0.154 & 1.000 \\ 
+  COVID-19 & Human & 0.82 & +0.20 & $-$0.01 & 1.000 & 1.000 \\ 
+  Geospatial & AI & 0.00 & +0.00 & 0.43 & 0.218 & 1.000 \\ 
+  Geospatial & Human & 0.01 & $-$0.01 & $-$0.25 & 0.492 & 1.000 \\ 
+  GIFT-Eval & AI & 0.22 & +0.16 & 0.37 & 0.296 & 1.000 \\ 
+  GIFT-Eval & Human & 0.03 & +0.02 & $-$0.14 & 0.707 & 1.000 \\ 
+  ZAPBench & AI & 0.12 & +0.13 & 0.35 & 0.127 & 1.000 \\ 
+  ZAPBench & Human & 0.85 & +0.40 & 0.34 & 0.148 & 1.000 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\end{table}

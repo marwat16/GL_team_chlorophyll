@@ -1,0 +1,12 @@
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.476, "method_s": 9.564, "peak_rss_mb": 226.7, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.479, "method_s": 9.489, "peak_rss_mb": 226.0, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.48, "method_s": 9.485, "peak_rss_mb": 226.8, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.473, "method_s": 9.612, "peak_rss_mb": 227.3, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.493, "method_s": 9.646, "peak_rss_mb": 226.7, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.474, "method_s": 9.646, "peak_rss_mb": 226.9, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.474, "method_s": 9.591, "peak_rss_mb": 227.4, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.485, "method_s": 9.67, "peak_rss_mb": 226.9, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.474, "method_s": 9.544, "peak_rss_mb": 225.9, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.474, "method_s": 9.652, "peak_rss_mb": 226.1, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.478, "method_s": 9.678, "peak_rss_mb": 227.1, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
+{"treatment": "ai", "ref_date": "2025-02-01", "load_s": 0.478, "method_s": 9.757, "peak_rss_mb": 226.2, "n_rows": 208, "n_quantiles": 23, "any_nan": false, "monotone": true, "wis_check": 38.21}
