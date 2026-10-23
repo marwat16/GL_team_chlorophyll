@@ -20,6 +20,7 @@ import shutil
 
 class RunnerConfig:
     ROOT_DIR = Path(dirname(realpath(__file__)))
+    REPO_DIR = ROOT_DIR.parent.parent
 
     # ================================ USER SPECIFIC CONFIG ================================
     """The name of the experiment."""
@@ -88,7 +89,7 @@ class RunnerConfig:
 
     def before_experiment(self) -> None:
         subprocess.run(
-            ["python3", "/home/gl_chlorophyll/GL_team_chlorophyll/experiment_code/warmup.py"],
+            ["python3", str(self.REPO_DIR / "experiment_code" / "warmup.py")],
             check=True,
         )
 
@@ -108,9 +109,9 @@ class RunnerConfig:
         self.remote_energy_file = remote_file
 
         remote_code_file = (
-            f"/home/gl_chlorophyll/GL_team_chlorophyll/experiment_code/"
-            f"{context.execute_run['benchmark']}/"
-            f"{context.execute_run['code']}.sh"
+            self.REPO_DIR / "experiment_code"
+            / context.execute_run['benchmark']
+            / f"{context.execute_run['code']}.sh"
         )
 
         remote_cmd = (
